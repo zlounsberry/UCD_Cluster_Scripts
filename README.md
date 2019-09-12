@@ -1,7 +1,7 @@
-Below, you would replace /PATH/DateCode_Project with your directory name on the cluster.\n
-For example, `sed -i 's/PATH/share\/[LabID]/g' would change this README to a copy/pasta usable version that would make this project happen in your lab share.\n
-Note there is a bit of hard-coding in here (e.g., 03 scripts that call specific chromosome ID's that may not be present in your reference data...\n
-This is primarily designed for the equine research unit at the VGL but can be adapted to your system if you know a little of BASH... Good luck!\n
+Below, you would replace /PATH/DateCode_Project with your directory name on the cluster.<br />
+For example, `sed -i 's/PATH/share\/[LabID]/g' would change this README to a copy/pasta usable version that would make this project happen in your lab share.<br />
+Note there is a bit of hard-coding in here (e.g., 03 scripts that call specific chromosome ID's that may not be present in your reference data...<br />
+This is primarily designed for the equine research unit at the VGL but can be adapted to your system if you know a little of BASH... Good luck!<br />
 
 # Directory Structure:
 ```
