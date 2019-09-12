@@ -1,16 +1,17 @@
-Below, you would replace DateCode_Project with your directory name on the cluster.
+Below, you would replace /PATH/DateCode_Project with your directory name on the cluster.
+For example, `sed -i 's/PATH/share\/[LabID]/g' would change this README to a copy/pasta usable version that would make this project happen in your lab share.
 
 # Directory Structure:
 ```
-mkdir DateCode_Project
-mkdir DateCode_Project/01_HTStream
-mkdir DateCode_Project/02_Aligned
-mkdir DateCode_Project/03_Call_Variants
+mkdir /PATH/DateCode_Project
+mkdir /PATH/DateCode_Project/01_HTStream
+mkdir /PATH/DateCode_Project/02_Aligned
+mkdir /PATH/DateCode_Project/03_Call_Variants
 ```
 # Pipeline:
 
 ## Step 1 - HTStream
-#### Directory = DateCode_Project/01_HTStream
+#### Directory = /PATH/DateCode_Project/01_HTStream
 #### Fastq files in any directory you want (with `_R1_001.fastq.gz` and `_R2_001.fastq.gz` extensions!)
 #### Files needed in working directory = `samples.txt` 
 This is a file containing 2 columns (tab-delimited) containing the path to your fastq data and the sample IDs for those samples. 
@@ -19,7 +20,7 @@ _NOTE: Keep the suffix on the fastq file (e.g., the S50_L001 on `sample1_S50_L00
 #### Example:
 ```
 user@cluster:/PATH/DateCode_Project/01_HTStream$ cat samples.txt
-/PATH_TO_DATA/     Only_Sample_S10_L002
+/PATH_TO_FASTQ_DATA/     Only_Sample_S10_L002
 ```
 
 #### Once you have samples.txt, you can run: 
@@ -29,22 +30,20 @@ sbatch 01_htstream_clean.sh
 while in the `/PATH/DateCode_Project/01_HTStream` directory to clean your data.
 
 ## Step 2.1 - Split cleaned fastq
-#### Directory = DateCode_Project/02_Aligned
-#### Fastq files (cleaned with HTStream) in DateCode_Project/01_HTStream
+#### Directory = `/PATH/DateCode_Project/02_Aligned`
+#### Fastq files (cleaned with HTStream) in `/PATH/DateCode_Project/01_HTStream` (which here needs to be the same as `../01_HTStream`)
 #### Files needed in working directory = `samples_split.txt` 
 ##### `samples_split.txt` is a 1-column file containing sample names
-##### You can make `samples_split.txt` using `awk '{print $2}' DateCode_Project/01_HTStream/samples.txt`.
+##### You can make `samples_split.txt` using `awk '{print $2}' /PATH/DateCode_Project/01_HTStream/samples.txt`.
 
-To run: 
+To run, make sure you are in the `/PATH/DateCode_Project/02_Align` directory, change NUMBER in the array=1-NUMBER (line 4) to be the result of `wc -l < samples_split.txt`and then execute:
 ```
 sbatch 02.1_htstream_split_fastq.sh
 ```
-while in the `DateCode_Project/02_Align` directory.
-_NOTE: the datapath is hardcoded as a variable `datapath=DateCode_Project`. Change DateCode_Project to match your directory_
 
 ## Step 2.2 - Align split fastq files
-#### Directory = DateCode_Project/02_Aligned
-#### Fastq files (split in step 2.1) in DateCode_Project/02_Aligned
+#### Directory = /PATH/DateCode_Project/02_Aligned
+#### Fastq files (split in step 2.1) in /PATH/DateCode_Project/02_Aligned
 #### Files needed in working directory = `samples_align.txt` 
 ##### `samples_align.txt` is a 4-column file containing various bits of information for each split fastq
 ###### `samples_align.txt` is created by running this in the current directory:
@@ -64,13 +63,13 @@ To run:
 ```
 sbatch 02.2_htstream_align.sh
 ```
-while in the `DateCode_Project/02_Align` directory.
-_NOTE: the datapath is hardcoded as a variable `datapath=DateCode_Project`. Change DateCode_Project to match your directory_
+while in the `/PATH/DateCode_Project/02_Align` directory.
+_NOTE: the datapath is hardcoded as a variable `datapath=/PATH/DateCode_Project`. Change /PATH/DateCode_Project to match your directory_
 
 
 ## Step 2.3 - Merge split alignment files
-#### Directory = DateCode_Project/02_Aligned
-#### BAM files (aligned in step 2.2) in DateCode_Project/02_Aligned
+#### Directory = /PATH/DateCode_Project/02_Aligned
+#### BAM files (aligned in step 2.2) in /PATH/DateCode_Project/02_Aligned
 #### Files needed in working directory = `samples_merge.txt` 
 ##### `samples_merge.txt` is a 1-column file containing sample IDs
 ###### `samples_merge.txt` is created by running this in the current directory:
@@ -81,16 +80,16 @@ To run:
 ```
 sbatch 02.3_htstream_merge.sh
 ```
-while in the `DateCode_Project/02_Align` directory.
-_NOTE: the datapath_Project is hardcoded as a variable `datapath=DateCode_Project`. Change DateCode_Project to match your directory_
+while in the `/PATH/DateCode_Project/02_Align` directory.
+_NOTE: the datapath_Project is hardcoded as a variable `datapath=/PATH/DateCode_Project`. Change /PATH/DateCode_Project to match your directory_
 
 ## Step 3.1 - Create variant calling scripts and directory structure
-#### Directory = DateCode_Project/03_Call_Variants
+#### Directory = /PATH/DateCode_Project/03_Call_Variants
 #### Files needed in working directory = `chromosome_lengths.txt` 
 ##### This is a 2-column (tab-delimited) text file containing chromosome ID (matching ref genome) in column 1 and the length of that chromosome in column 2
 Example (in horses for equCab3.0, in a reference files that I changed chr names to chr1-chrn):
 ```
-user@cluster:DateCode_Project/03_Call_Variants$ head -n 5 chromosome_lengths.txt
+user@cluster:/PATH/DateCode_Project/03_Call_Variants$ head -n 5 chromosome_lengths.txt
 chr1	188260577
 chr2	121350024
 chr3	121351753
@@ -101,11 +100,11 @@ To run:
 ```
 sbatch 03.1_hts_divide_for_freebayes.sh
 ```
-while in the `DateCode_Project/03_Call_Variants` directory.
+while in the `/PATH/DateCode_Project/03_Call_Variants` directory.
 
 ## Step 3.2 - Call variants using freebayes/samtools mpileup on thousands of subsets of the genome (RIP your cluster user priority)
-#### Directory = DateCode_Project/03_Call_Variants
-#### BAM files (merged in step 2.3) in DateCode_Project/02_Aligned
+#### Directory = /PATH/DateCode_Project/03_Call_Variants
+#### BAM files (merged in step 2.3) in /PATH/DateCode_Project/02_Aligned
 #### Files needed in working directory = `chromosome_lengths.txt` 
 ##### This is a 2-column (tab-delimited) text file containing chromosome ID (matching ref genome) in column 1 and the length of that chromosome in column 2
 
@@ -113,34 +112,34 @@ To run:
 ```
 sbatch 03.2_htsfreebayes.sh
 ```
-while in the `DateCode_Project/03_Call_Variants` directory.
+while in the `/PATH/DateCode_Project/03_Call_Variants` directory.
 
 ## Step 3.3 - Merge chr-specific vcf subsets into single vcfs per chromosome 
 ### (Be prepared to wait in the queue a bit for this, your priority is likely in bad shape and everyone is probably a little mad at you. Just a little though. Hey chin up you're doing great!)
-#### Directory = DateCode_Project/03_Call_Variants
-#### VCF files (created in step 3.2) in DateCode_Project/03_Aligned
+#### Directory = /PATH/DateCode_Project/03_Call_Variants
+#### VCF files (created in step 3.2) in /PATH/DateCode_Project/03_Aligned
 #### Files needed in working directory = `chromosome_lengths.txt`
 
 To run: 
 ```
 sbatch 03.3_Concatenate_and_add_IDs_vcfs.sh
 ```
-while in the `DateCode_Project/03_Call_Variants` directory.
+while in the `/PATH/DateCode_Project/03_Call_Variants` directory.
 
 ## Step 3.4 - Merge chr-specific vcfs into a single vcf. The final step!
-#### Directory = DateCode_Project/03_Call_Variants
-#### VCF files (created in step 3.3) in DateCode_Project/03_Aligned
+#### Directory = /PATH/DateCode_Project/03_Call_Variants
+#### VCF files (created in step 3.3) in /PATH/DateCode_Project/03_Aligned
 
 To run: 
 ```
 sbatch 03.4_Concatenate_vcfs_All.sh
 ```
-while in the `DateCode_Project/03_Call_Variants` directory.
+while in the `/PATH/DateCode_Project/03_Call_Variants` directory.
 
-_NOTE: Some chunks will be missing. If the variant caller runs into an issue with a repetitive or otherwise low-complexity region, it may stall out. That region may time out, fail, etc. but the rest of the genome will run fine. To figure out which regions you are missing (and determine if you want to rescue them), try `grep -i canc */*out` in the `DateCode_Project/03_Call_Variants` directory. Every slurm outfile with a cancel job will correspond to a region:_
+_NOTE: Some chunks will be missing. If the variant caller runs into an issue with a repetitive or otherwise low-complexity region, it may stall out. That region may time out, fail, etc. but the rest of the genome will run fine. To figure out which regions you are missing (and determine if you want to rescue them), try `grep -i canc */*out` in the `/PATH/DateCode_Project/03_Call_Variants` directory. Every slurm outfile with a cancel job will correspond to a region:_
 
 ```
-user@cluster:DateCode_Project/03_Call_Variants$ grep CANC */*out
+user@cluster:/PATH/DateCode_Project/03_Call_Variants$ grep CANC */*out
 chr10/arrayJob_1199087_275.out:slurmstepd: error: *** JOB 1201694 ON fleet-34 CANCELLED AT 2019-07-01T16:28:11 ***
 chr10/arrayJob_1199087_287.out:slurmstepd: error: *** JOB 1201706 ON fleet-5 CANCELLED AT 2019-07-01T16:35:12 ***
 chr10/arrayJob_1199087_288.out:slurmstepd: error: *** JOB 1201707 ON fleet-3 CANCELLED AT 2019-07-01T16:32:12 ***
