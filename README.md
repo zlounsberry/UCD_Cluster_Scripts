@@ -1,5 +1,7 @@
-Below, you would replace /PATH/DateCode_Project with your directory name on the cluster.
-For example, `sed -i 's/PATH/share\/[LabID]/g' would change this README to a copy/pasta usable version that would make this project happen in your lab share.
+Below, you would replace /PATH/DateCode_Project with your directory name on the cluster.\n
+For example, `sed -i 's/PATH/share\/[LabID]/g' would change this README to a copy/pasta usable version that would make this project happen in your lab share.\n
+Note there is a bit of hard-coding in here (e.g., 03 scripts that call specific chromosome ID's that may not be present in your reference data...\n
+This is primarily designed for the equine research unit at the VGL but can be adapted to your system if you know a little of BASH... Good luck!\n
 
 # Directory Structure:
 ```
@@ -23,7 +25,7 @@ user@cluster:/PATH/DateCode_Project/01_HTStream$ cat samples.txt
 /PATH_TO_FASTQ_DATA/     Only_Sample_S10_L002
 ```
 
-#### Once you have samples.txt, you can run: 
+#### Once you have samples.txt in /PATH/DateCode_Project/01_HTStream, you can run:
 ```
 sbatch 01_htstream_clean.sh
 ```
@@ -36,7 +38,7 @@ while in the `/PATH/DateCode_Project/01_HTStream` directory to clean your data.
 ##### `samples_split.txt` is a 1-column file containing sample names
 ##### You can make `samples_split.txt` using `awk '{print $2}' /PATH/DateCode_Project/01_HTStream/samples.txt`.
 
-To run, make sure you are in the `/PATH/DateCode_Project/02_Align` directory, change NUMBER in the array=1-NUMBER (line 4) to be the result of `wc -l < samples_split.txt`and then execute:
+To run, make sure you are in the `/PATH/DateCode_Project/02_Align` directory, change NUMBER in the array=1-NUMBER (line 4) in 02.1_htstream_split_fastq.sh to be the result of `wc -l < samples_split.txt`, and then execute:
 ```
 sbatch 02.1_htstream_split_fastq.sh
 ```
@@ -59,13 +61,11 @@ cat <(paste <(ls *_R10*.fastq.gz) \
 ```
 _NOTE: If your sample ID has \_R20, \_R10 or \_SE0 before the fastq suffix, you will have to alter this (or it will probably keep over-writing files)!_
 
-To run: 
+Once this is made, change NUMBER in line 4 of 02.2_htstream_align.sh to the result of `wc -l < samples_align.txt`, then run: 
 ```
 sbatch 02.2_htstream_align.sh
 ```
 while in the `/PATH/DateCode_Project/02_Align` directory.
-_NOTE: the datapath is hardcoded as a variable `datapath=/PATH/DateCode_Project`. Change /PATH/DateCode_Project to match your directory_
-
 
 ## Step 2.3 - Merge split alignment files
 #### Directory = /PATH/DateCode_Project/02_Aligned
@@ -76,18 +76,17 @@ _NOTE: the datapath is hardcoded as a variable `datapath=/PATH/DateCode_Project`
 ```
 cut -f4 samples_align.txt | sort -u | grep -v SE > samples_merge.txt
 ```
-To run: 
+To run, change NUMBER in line 4 of 02.3_htstream_merge.sh to the result of `wc -l < samples_merge.txt`, then run: 
 ```
 sbatch 02.3_htstream_merge.sh
 ```
 while in the `/PATH/DateCode_Project/02_Align` directory.
-_NOTE: the datapath_Project is hardcoded as a variable `datapath=/PATH/DateCode_Project`. Change /PATH/DateCode_Project to match your directory_
 
 ## Step 3.1 - Create variant calling scripts and directory structure
 #### Directory = /PATH/DateCode_Project/03_Call_Variants
 #### Files needed in working directory = `chromosome_lengths.txt` 
 ##### This is a 2-column (tab-delimited) text file containing chromosome ID (matching ref genome) in column 1 and the length of that chromosome in column 2
-Example (in horses for equCab3.0, in a reference files that I changed chr names to chr1-chrn):
+Example (in an equCab3.0 fasta that I changed chr names to chr1-chrn):
 ```
 user@cluster:/PATH/DateCode_Project/03_Call_Variants$ head -n 5 chromosome_lengths.txt
 chr1	188260577
@@ -96,7 +95,7 @@ chr3	121351753
 chr4	109462549
 chr5	96759418
 ```
-To run: 
+To run, change NUMBER in line 4 of 03.1_hts_divide_for_freebayes.sh to the result of `wc -l < chromosome_lengths.txt`, then run: 
 ```
 sbatch 03.1_hts_divide_for_freebayes.sh
 ```
@@ -108,7 +107,7 @@ while in the `/PATH/DateCode_Project/03_Call_Variants` directory.
 #### Files needed in working directory = `chromosome_lengths.txt` 
 ##### This is a 2-column (tab-delimited) text file containing chromosome ID (matching ref genome) in column 1 and the length of that chromosome in column 2
 
-To run: 
+To run, change NUMBER in line 4 of 03.2_htsfreebayes.sh to the result of `wc -l < chromosome_lengths.txt`, then run:
 ```
 sbatch 03.2_htsfreebayes.sh
 ```
@@ -120,7 +119,7 @@ while in the `/PATH/DateCode_Project/03_Call_Variants` directory.
 #### VCF files (created in step 3.2) in /PATH/DateCode_Project/03_Aligned
 #### Files needed in working directory = `chromosome_lengths.txt`
 
-To run: 
+To run, change NUMBER in line 4 of 03.3_Concatenate_and_add_IDs_vcfs.sh to the result of `wc -l < chromosome_lengths.txt`, then run: 
 ```
 sbatch 03.3_Concatenate_and_add_IDs_vcfs.sh
 ```
