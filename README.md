@@ -32,7 +32,7 @@ sbatch 01_htstream_clean.sh
 while in the `/PATH/DateCode_Project/01_HTStream` directory to clean your data.
 
 ## Step 2.1 - Split cleaned fastq
-#### Directory = `/PATH/DateCode_Project/02_Aligned`
+#### Directory = /PATH/DateCode_Project/02_Aligned
 #### Fastq files (cleaned with HTStream) in `/PATH/DateCode_Project/01_HTStream` (which here needs to be the same as `../01_HTStream`)
 #### Files needed in working directory = `samples_split.txt` 
 ##### `samples_split.txt` is a 1-column file containing sample names
