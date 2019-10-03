@@ -95,7 +95,7 @@ chr3	121351753
 chr4	109462549
 chr5	96759418
 ```
-To run, change NUMBER in line 4 of 03.1_hts_divide_for_freebayes.sh to the result of `wc -l < chromosome_lengths.txt`, then run: 
+To run, change NUMBER in line 4 of 03.1_hts_divide_for_freebayes.sh to the result of `wc -l < chromosome_lengths.txt`, change \[REFERENCE FASTA\] (line 49 and 50) to the full path of your reference fasta sequence, then run: 
 ```
 sbatch 03.1_hts_divide_for_freebayes.sh
 ```
