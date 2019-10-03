@@ -50,14 +50,14 @@ sbatch 02.1_htstream_split_fastq.sh
 ##### `samples_align.txt` is a 4-column file containing various bits of information for each split fastq
 ###### `samples_align.txt` is created by running this in the current directory:
 ```
-cat <(paste <(ls *_R10*.fastq.gz) \
-	<(ls *_R20*.fastq.gz) \
-	<(ls *_R10*.fastq.gz | sed 's/.fastq.gz//g') \
-	<(ls *_R10*.fastq.gz | sed 's/_S.*//g')) \
-	<(paste <(ls *_SE0*.fastq.gz) \
-	<(ls *_SE0*.fastq.gz | sed 's/.*.//g') \
-	<(ls *_SE0*.fastq.gz | sed 's/.fastq.gz//g') \
-	<(ls *_SE0*.fastq.gz | sed 's/_S.*//g')) > samples_align.txt
+cat <(paste <(ls *.R10*.fastq.gz) \
+	<(ls *.R20*.fastq.gz) \
+	<(ls *.R10*.fastq.gz | sed 's/.fastq.gz//g') \
+	<(ls *.R10*.fastq.gz | sed 's/_S.*//g')) \
+	<(paste <(ls *.SE0*.fastq.gz) \
+	<(ls *.SE0*.fastq.gz | sed 's/.*.//g') \
+	<(ls *.SE0*.fastq.gz | sed 's/.fastq.gz//g') \
+	<(ls *.SE0*.fastq.gz | sed 's/_S.*//g')) > samples_align.txt
 ```
 _NOTE: If your sample ID has \_R20, \_R10 or \_SE0 before the fastq suffix, you will have to alter this (or it will probably keep over-writing files)!_
 
