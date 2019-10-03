@@ -76,7 +76,7 @@ while in the `/PATH/DateCode_Project/02_Align` directory.
 ```
 cut -f4 samples_align.txt | sort -u | grep -v SE > samples_merge.txt
 ```
-To run, change NUMBER in line 4 of 02.3_htstream_merge.sh to the result of `wc -l < samples_merge.txt`, then run: 
+To run, change NUMBER in line 4 of 02.3_htstream_merge.sh to the result of `wc -l < samples_merge.txt`, change \[REFERENCE FASTA\] to the full path of your reference fasta sequence, then run: 
 ```
 sbatch 02.3_htstream_merge.sh
 ```
