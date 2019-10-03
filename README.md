@@ -61,7 +61,7 @@ cat <(paste <(ls *.R10*.fastq.gz) \
 ```
 _NOTE: If your sample ID has \_R20, \_R10 or \_SE0 before the fastq suffix, you will have to alter this (or it will probably keep over-writing files)!_
 
-Once this is made, change NUMBER in line 4 of 02.2_htstream_align.sh to the result of `wc -l < samples_align.txt`, then run: 
+Once this is made, change NUMBER in line 4 of 02.2_htstream_align.sh to the result of `wc -l < samples_align.txt`, change \[REFERENCE FASTA\] (line 31) to the full path of your reference fasta sequence, then run: 
 ```
 sbatch 02.2_htstream_align.sh
 ```
@@ -76,7 +76,7 @@ while in the `/PATH/DateCode_Project/02_Align` directory.
 ```
 cut -f4 samples_align.txt | sort -u | grep -v SE > samples_merge.txt
 ```
-To run, change NUMBER in line 4 of 02.3_htstream_merge.sh to the result of `wc -l < samples_merge.txt`, change \[REFERENCE FASTA\] (line 31) to the full path of your reference fasta sequence, then run: 
+To run, change NUMBER in line 4 of 02.3_htstream_merge.sh to the result of `wc -l < samples_merge.txt`, then run: 
 ```
 sbatch 02.3_htstream_merge.sh
 ```
