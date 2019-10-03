@@ -32,5 +32,5 @@ bwa mem -R "@RG\tID:${ID}\tSM:${ID}" [REFERENCE FASTA] ${R1} ${R2} > ${sample}.s
 
 # load samtools module
 module load samtools
-samtools view -q 10 -h -bS ${datapath}/02_Aligned/${sample}.sam -o ${sample}.bam
+samtools view -q 10 -h -bS ${sample}.sam -o ${sample}.bam
 rm ${sample}.sam ${R1} ${R2}
