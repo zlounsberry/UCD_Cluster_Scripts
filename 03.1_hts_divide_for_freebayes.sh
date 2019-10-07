@@ -46,6 +46,6 @@ start=\$(sed \"\${SLURM_ARRAY_TASK_ID}q;d\" ranges.txt | cut -f2)
 end=\$(sed \"\${SLURM_ARRAY_TASK_ID}q;d\" ranges.txt | cut -f3)
 echo \"Processing ${number} at \${start}-\${end}\"
 
-freebayes -f [REFERENCE FASTA] --min-alternate-fraction 0.3 --region ${number}:\${start}-\${end} sorted/*.bam > freebayes/${number}.\${start}-\${end}.vcf
-samtools mpileup -uf [REFERENCE FASTA] -r ${number}:\${start}-\${end} sorted/*.bam | bcftools view -cg - > samtools/${number}.\${start}-\${end}.vcf
+freebayes -f [REFERENCE FASTA] --min-alternate-fraction 0.3 --region ${number}:\${start}-\${end} ../02_Aligned/sorted/*.bam > freebayes/${number}.\${start}-\${end}.vcf
+samtools mpileup -uf [REFERENCE FASTA] -r ${number}:\${start}-\${end} ../02_Aligned/sorted/sorted/*.bam | bcftools view -cg - > samtools/${number}.\${start}-\${end}.vcf
 " > ${number}/${number}.freebayes.sh
